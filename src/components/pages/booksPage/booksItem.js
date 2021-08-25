@@ -17,3 +17,4 @@ export default class BooksItem extends React.Component {
         )
     }
 }
+// kazakhstan // 
