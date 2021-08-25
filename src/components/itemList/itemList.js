@@ -1,20 +1,43 @@
-import React, {Component} from 'react';
+import React, {useState, useEffect} from 'react';
 import './itemList.css';
-export default class ItemList extends Component {
+import Spinner from '../spinner'
 
-    render() {
-        return (
-            <ul className="item-list list-group">
-                <li className="list-group-item">
-                    John Snow
+function ItemList({getData, renderItem, onItemSelected}) {
+    const [itemList, updateList] = useState([])
+
+    useEffect(() => {
+        getData()
+        .then( (data) => {
+            updateList(data)
+        })
+    }, []) 
+
+    function renderItems(arr) {
+        return arr.map((item) => {
+            const {id} = item;
+            const label = renderItem(item)
+            return (
+                <li 
+                    key={id}
+                    onClick={ () => onItemSelected(id)}
+                    className="list-group-item">
+                    {label}
                 </li>
-                <li className="list-group-item">
-                    Brandon Stark
-                </li>
-                <li className="list-group-item">
-                    Geremy
-                </li>
-            </ul>
-        );
+            )
+        })
     }
+  
+    if(!itemList) {
+        return <Spinner/>
+    }
+
+    const items = renderItems(itemList)
+
+    return (
+        <ul className="item-list list-group"          >
+            {items}
+        </ul>
+    );
 }
+
+export default ItemList
